@@ -3,32 +3,28 @@ import styles from '../css/page.module.scss';
 
 function Convert(){
 
-    var myHeaders = new Headers();
-    myHeaders.append("apikey", "gbAuflq1LDfrQliJCAuU3jYn63ZSgdLl");
-
-    interface MyObj extends RequestInit {
-        headers: any;
-      }
-    
-      var requestOptions: MyObj = {
-        method: 'GET',
-        headers: myHeaders
-      };
     const [amount, setAmount] = useState(0);
     const [fromCurrency, setFromCurrency] = useState('rub');
     const [toCurrency, setToCurrency] = useState('usd');
     const [exchangeRate, setExchangeRate] = useState(0);
 
+    
+
     useEffect(() => {
-        if (fromCurrency && toCurrency) {
-            fetch(`https://api.apilayer.com/exchangerates_data/convert?to=${fromCurrency}&from=${toCurrency}&amount=${setAmount}`, requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                    setExchangeRate(data.rates[toCurrency]);
-                })
-                .catch(error => console.error('Error fetching exchange rate:', error));
-        }
-    }, [fromCurrency, toCurrency]);
+        fetch('https://www.cbr-xml-daily.ru/daily_json.js')
+            .then(response => response.json())
+            .then(data => {
+                const rates = data.Valute;
+                
+                if (rates[toCurrency.toUpperCase()]) {
+                    const exchangeRate = rates[toCurrency.toUpperCase()].Value;
+                    setExchangeRate(exchangeRate);
+                } else {
+                    console.error("Currency not found");
+                }
+            })
+            .catch(error => console.error(error));
+    }, [toCurrency]);
 
     const handleAmountChange = (e: any) => {
         setAmount(e.target.value)
@@ -41,7 +37,7 @@ function Convert(){
         setToCurrency(e.target.value)
     }
 
-    const converted:number = amount * exchangeRate;
+    const converted = amount * exchangeRate || 0;
 
     let zero = 0;
 
@@ -58,11 +54,8 @@ function Convert(){
                         <option value='usd'>USD</option>
                         <option value='eur'>EUR</option>
                     </select>
-                    <button className={styles.sel}>⇆</button>
-                    {exchangeRate !== 0 && (
-                        <input placeholder='Converted Amount' className={styles.inp} id='val' value={converted}></input>
-                    )}
-                    <input placeholder='Количество' className={styles.inp} id='val' defaultValue={zero} value={converted}  ></input>
+
+                    <input placeholder='Количество' className={styles.inp} id='val' value={converted}  ></input>
                     <select className={styles.vl} value={toCurrency} onChange={handleToCurrencyChange}>
                         <option value='rub'>RUB</option>
                         <option value='usd'>USD</option>
