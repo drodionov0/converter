@@ -20,7 +20,7 @@ function Convert(){
                     const exchangeRate = rates[toCurrency.toUpperCase()].Value;
                     setExchangeRate(exchangeRate);
                 } else {
-                    console.error("Currency not found");
+                    console.error("Валюта не найдена");
                 }
             })
             .catch(error => console.error(error));

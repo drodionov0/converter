@@ -1,0 +1,23 @@
+.page{
+    justify-content: center;
+    display: flex;
+    margin-top: 100px;
+}
+
+.cours{
+    display: flex;
+    align-items: center;
+    border: 3px rgb(100, 96, 96) solid;
+    height: 50px;
+    border-radius: 20px;
+    margin-right: 50px;
+}
+
+.cours img{
+    margin-right: 30px;
+    margin-left: 5px;
+}
+
+.cours p{
+    margin-right: 5px;
+}
